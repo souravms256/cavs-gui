@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Peers</h2>
+<ul>
+  {% for p in peers %}<li>{{ p }}</li>{% endfor %}
+</ul>
+<h3>Add Peer</h3>
+<form method="post">
+  <input name="peer" placeholder="http://127.0.0.1:5001" required>
+  <button type="submit">Register</button>
+</form>
+{% endblock %}

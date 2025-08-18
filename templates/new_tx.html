@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>New Signed Transaction</h2>
+<p>Use <code>wallet.py</code> to generate keys and signature, then paste here.</p>
+<form method="post">
+  <label>Sender (address)</label>
+  <input name="sender" required>
+  <label>Recipient (address)</label>
+  <input name="recipient" required>
+  <label>Amount</label>
+  <input name="amount" type="number" step="0.0001" required>
+  <label>Product ID</label>
+  <input name="product_id" required>
+  <label>Event Type</label>
+  <input name="event_type" placeholder="MANUFACTURED/SHIPPED/RECEIVED" required>
+  <label>Metadata</label>
+  <input name="metadata">
+  <label>Timestamp (epoch sec)</label>
+  <input name="timestamp" type="number" required>
+  <label>Public Key (hex)</label>
+  <textarea name="public_key" rows="3" required></textarea>
+  <label>Signature (hex)</label>
+  <textarea name="signature" rows="3" required></textarea>
+  <button type="submit">Submit Transaction</button>
+</form>
+{% endblock %}

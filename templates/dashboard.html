@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<p>Blocks: <b>{{ height }}</b></p>
+<form method="post" action="{{ url_for('gui_mine') }}">
+  <button type="submit">⛏️ Mine Block</button>
+</form>
+
+<h3>Pending Transactions (Mempool)</h3>
+<table>
+  <tr><th>Sender</th><th>Recipient</th><th>Amount</th><th>Product</th><th>Event</th><th>Time</th></tr>
+  {% for t in pending %}
+  <tr>
+    <td>{{ t.sender or t["sender"] }}</td>
+    <td>{{ t.recipient or t["recipient"] }}</td>
+    <td>{{ t.amount or t["amount"] }}</td>
+    <td>{{ t.product_id or t["product_id"] }}</td>
+    <td>{{ t.event_type or t["event_type"] }}</td>
+    <td>{{ t.timestamp or t["timestamp"] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>Peers</h3>
+<ul>
+  {% for p in peers %}
+    <li>{{ p }}</li>
+  {% endfor %}
+</ul>
+
+<form method="post" action="{{ url_for('gui_resolve') }}">
+  <button type="submit">🔁 Resolve (Consensus)</button>
+</form>
+{% endblock %}

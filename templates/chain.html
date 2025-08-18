@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Blockchain</h2>
+{% for b in chain %}
+  <div class="block">
+    <div><b>#{{ b.index }}</b> | prev: {{ b.previous_hash }}</div>
+    <div>time: {{ b.timestamp }} | merkle: {{ b.merkle_root }} | nonce: {{ b.proof.nonce }}</div>
+    <details>
+      <summary>Transactions ({{ b.transactions|length }})</summary>
+      <table>
+        <tr><th>Sender</th><th>Recipient</th><th>Amount</th><th>Product</th><th>Event</th><th>Time</th></tr>
+        {% for t in b.transactions %}
+        <tr>
+          <td>{{ t.sender }}</td><td>{{ t.recipient }}</td><td>{{ t.amount }}</td>
+          <td>{{ t.product_id }}</td><td>{{ t.event_type }}</td><td>{{ t.timestamp }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </details>
+  </div>
+{% endfor %}
+{% endblock %}

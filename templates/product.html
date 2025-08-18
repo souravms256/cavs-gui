@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Product History</h2>
+<form method="get">
+  <input name="id" placeholder="PROD-123" value="{{ pid }}">
+  <button type="submit">Lookup</button>
+</form>
+{% if pid %}
+<h3>ID: {{ pid }}</h3>
+<table>
+  <tr><th>Block</th><th>Sender</th><th>Recipient</th><th>Amount</th><th>Event</th><th>Meta</th><th>Time</th></tr>
+  {% for e in events %}
+  <tr>
+    <td>{{ e.block if e.block else "pending" }}</td>
+    <td>{{ e.sender }}</td>
+    <td>{{ e.recipient }}</td>
+    <td>{{ e.amount }}</td>
+    <td>{{ e.event_type }}</td>
+    <td>{{ e.metadata }}</td>
+    <td>{{ e.timestamp }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
