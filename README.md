@@ -1,25 +1,73 @@
-# CAVS (Python MVP)
-
-A Python-based prototype of a **Content Authenticity & Verification System (CAVS)**.
-
-## Features
-- Canonicalize files and metadata
-- Compute SHA-256 content hash
-- Sign with Ed25519
-- Mock IPFS client (replace with nft.storage/web3.storage)
-- Anchor content hashes to an EVM-compatible blockchain
-- Simple FastAPI service for anchoring and verifying
-
-## Quickstart
-```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn cavs.api:app --reload
+Got it 👍
+Here’s a **clean, structured `README.md`** for your **CAVS (Content Authenticity & Verification System)** prototype.
 
 ---
 
-## 3. contracts/ContentAnchor.sol
+# CAVS – Content Authenticity & Verification System
+
+A **Python + Blockchain prototype** for authenticating and verifying digital content.
+It ensures **integrity, ownership, and traceability** using cryptographic signatures, decentralized storage (IPFS), and blockchain anchoring.
+
+---
+
+## 🚀 Features
+
+* 📂 Canonicalize files + metadata
+* 🔒 Compute **SHA-256 content hash**
+* ✍️ Sign with **Ed25519 cryptography**
+* 🌐 Store metadata on **IPFS** (mock client → replace with `nft.storage` / `web3.storage`)
+* ⛓️ Anchor hashes on **EVM-compatible blockchain** (Ethereum, Polygon, etc.)
+* ⚡ REST API with **FastAPI** for anchoring & verification
+* 🛡️ Content **revocation support**
+
+---
+
+## 🛠️ Project Structure
+
+```
+CAVS/
+│── cavs/
+│   ├── __init__.py
+│   ├── api.py            # FastAPI endpoints
+│   ├── anchor.py         # Blockchain anchoring logic
+│   ├── ipfs_client.py    # Mock IPFS client
+│   ├── signer.py         # Ed25519 signing + verification
+│   └── utils.py          # Hashing + canonicalization
+│
+│── contracts/
+│   └── ContentAnchor.sol  # Solidity smart contract
+│
+│── requirements.txt       # Python dependencies
+│── README.md              # Documentation
+```
+
+---
+
+## ⚡ Quickstart
+
+### 1️⃣ Setup Environment
+
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2️⃣ Run FastAPI Service
+
+```bash
+uvicorn cavs.api:app --reload
+```
+
+Service will be live at 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## 📜 Smart Contract – `contracts/ContentAnchor.sol`
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -54,3 +102,62 @@ contract ContentAnchor {
         return records[contentHash];
     }
 }
+```
+
+---
+
+## 📡 API Endpoints
+
+### `POST /anchor`
+
+* Upload + sign + anchor content
+* Example request:
+
+```json
+{
+  "file_path": "docs/article.pdf",
+  "metadata": { "author": "Alice", "title": "Blockchain Paper" }
+}
+```
+
+### `GET /verify/{content_hash}`
+
+* Verify hash → blockchain record + revocation status
+
+---
+
+## 🔮 Next Steps
+
+* ✅ Replace mock IPFS with **real nft.storage / web3.storage**
+* ✅ Deploy contract to **Ethereum / Polygon testnet**
+* ✅ Add **frontend dashboard** for journalists & researchers
+* ✅ Support **AI-generated content detection**
+
+---
+
+## 📌 Requirements (`requirements.txt`)
+
+```
+fastapi
+uvicorn
+pydantic
+cryptography
+web3
+ipfshttpclient
+```
+
+---
+
+## ✨ Use Cases
+
+* Journalism – Prevent **fake news**
+* Research – Validate **original scientific data**
+* Media – Protect **creators’ rights**
+* Governance – Ensure **document integrity**
+
+---
+
+👉 With this, you have a working **Python MVP + Smart Contract** ready to extend into production.
+
+---
+
