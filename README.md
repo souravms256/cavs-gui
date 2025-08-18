@@ -1,8 +1,3 @@
-Got it 👍
-Here’s a **clean, structured `README.md`** for your **CAVS (Content Authenticity & Verification System)** prototype.
-
----
-
 # CAVS – Content Authenticity & Verification System
 
 A **Python + Blockchain prototype** for authenticating and verifying digital content.
