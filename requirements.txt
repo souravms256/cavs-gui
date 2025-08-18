@@ -1,3 +1,9 @@
-Flask==3.0.3
-requests==2.32.3
-ecdsa==0.19.0
+fastapi
+uvicorn[standard]
+web3
+cryptography
+requests
+python-dotenv
+sqlalchemy
+alembic
+pydantic
