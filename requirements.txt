@@ -1,9 +1,0 @@
-fastapi
-uvicorn[standard]
-web3
-cryptography
-requests
-python-dotenv
-sqlalchemy
-alembic
-pydantic
