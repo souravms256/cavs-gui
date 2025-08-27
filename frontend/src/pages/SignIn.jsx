@@ -1,20 +1,46 @@
 import { useState } from "react";
-export default function SignIn({ onNavigate, onSignIn }){
+import axios from 'axios';
+
+export default function SignIn({ onNavigate, onSignIn }) {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(null); // 'idle', 'loading', 'success', 'error'
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
-    setTimeout(() => {
-      console.log("Login data:", form);
-      setStatus("success");
-      onSignIn(form.email);
-    }, 1500);
+    setMessage(""); // Clear previous messages
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/signin", {
+        email: form.email,
+        password: form.password,
+      });
+
+      if (response.status === 200) {
+        setStatus("success");
+        setMessage("Sign in successful! Redirecting to dashboard...");
+        // Call the onSignIn prop with the returned user data or token
+        onSignIn(response.data.token);
+        setTimeout(() => {
+          onNavigate('dashboard');
+        }, 2000);
+      }
+    } catch (error) {
+      setStatus("error");
+      if (error.response) {
+        setMessage(error.response.data.message || "Invalid email or password.");
+      } else if (error.request) {
+        setMessage("No response from the server. Please check your network connection.");
+      } else {
+        setMessage("An unexpected error occurred. Please try again.");
+      }
+      console.error("Sign in error:", error);
+    }
   };
 
   return (
@@ -74,6 +100,11 @@ export default function SignIn({ onNavigate, onSignIn }){
             ) : "Sign In"}
           </button>
         </form>
+        {status && (
+          <div className={`mt-4 p-3 rounded-md text-sm text-center ${status === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            {message}
+          </div>
+        )}
         <div className="mt-6 text-center text-sm">
           <p className="text-gray-600">
             Don't have an account?{" "}

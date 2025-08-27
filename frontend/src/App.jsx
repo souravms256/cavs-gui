@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { jwtDecode } from 'jwt-decode';
 
-import globalStyles from "./styles/globalStyles";
 import Header from "./components/Header";
 import Router from "./components/Router";
 import Footer from "./components/Footer";
@@ -9,11 +9,13 @@ import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import globalStyles from "./styles/globalStyles";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("landing");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState(""); // Add state for user name
 
   // Refs for animation
   const landingRef = useRef(null);
@@ -28,15 +30,26 @@ export default function App() {
     dashboard: dashboardRef,
   };
 
-  const handleSignIn = (email) => {
-    setIsLoggedIn(true);
-    setUserEmail(email);
-    setCurrentPage("dashboard");
+  const handleSignIn = (token) => {
+    try {
+      // Decode the JWT token to get the user data
+      const decodedToken = jwtDecode(token);
+      setIsLoggedIn(true);
+      setUserEmail(decodedToken.email);
+      setUserName(decodedToken.name); // Set the user's name from the decoded token
+      setCurrentPage("dashboard");
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      // Handle the error, maybe show an alert or set an error state
+      alert("An error occurred. Please try signing in again.");
+      handleSignOut();
+    }
   };
 
   const handleSignOut = () => {
     setIsLoggedIn(false);
     setUserEmail("");
+    setUserName(""); // Clear the user's name
     setCurrentPage("landing");
   };
 
@@ -64,7 +77,7 @@ export default function App() {
               <Landing path="landing" onNavigate={setCurrentPage} />
               <SignIn path="signin" onNavigate={setCurrentPage} onSignIn={handleSignIn} />
               <SignUp path="signup" onNavigate={setCurrentPage} />
-              {isLoggedIn && <Dashboard path="dashboard" userEmail={userEmail} onNavigate={setCurrentPage} />}
+              {isLoggedIn && <Dashboard path="dashboard" userEmail={userEmail} userName={userName} onNavigate={setCurrentPage} />}
             </Router>
             <Footer />
           </main>
