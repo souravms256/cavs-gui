@@ -1,158 +1,150 @@
-# CAVS – Content Authenticity & Verification System
+Perfect 👍 thanks for sharing all the details! Since you’re using **Remix + Ganache** as your 
+# 🛡️ Content Verification System (Blockchain + Web3 + MongoDB)
 
-A **Python + Blockchain prototype** for authenticating and verifying digital content.
-It ensures **integrity, ownership, and traceability** using cryptographic signatures, decentralized storage (IPFS), and blockchain anchoring.
-
----
-
-## 🚀 Features
-
-* 📂 Canonicalize files + metadata
-* 🔒 Compute **SHA-256 content hash**
-* ✍️ Sign with **Ed25519 cryptography**
-* 🌐 Store metadata on **IPFS** (mock client → replace with `nft.storage` / `web3.storage`)
-* ⛓️ Anchor hashes on **EVM-compatible blockchain** (Ethereum, Polygon, etc.)
-* ⚡ REST API with **FastAPI** for anchoring & verification
-* 🛡️ Content **revocation support**
+A decentralized content verification system built with **Solidity, Hardhat/Remix, Ganache, MongoDB, Node.js/Express, and Vite + React**.
+The system allows users to **verify content hashes on-chain** and query whether a piece of content has been previously verified.
 
 ---
 
-## 🛠️ Project Structure
+## 📂 Project Structure
 
 ```
-CAVS/
-│── cavs/
-│   ├── __init__.py
-│   ├── api.py            # FastAPI endpoints
-│   ├── anchor.py         # Blockchain anchoring logic
-│   ├── ipfs_client.py    # Mock IPFS client
-│   ├── signer.py         # Ed25519 signing + verification
-│   └── utils.py          # Hashing + canonicalization
+project-root/
+│── backend/               # Node.js + Express server
+│   ├── server.js          # Backend entry point
+│   ├── models/            # MongoDB models
+│   ├── routes/            # API routes
+│   └── config/            # Mongo connection config
 │
-│── contracts/
-│   └── ContentAnchor.sol  # Solidity smart contract
+│── frontend/              # React + Vite client
+│   ├── src/
+│   │   ├── components/    # React components (Dashboard, Forms, etc.)
+│   │   └── main.jsx       # React entry point
+│   └── vite.config.js     # Vite config
 │
-│── requirements.txt       # Python dependencies
-│── README.md              # Documentation
+│── contracts/             # Solidity Smart Contracts
+│   └── VerificationSystem.sol
+│
+│── .env                   # Environment variables
+│── package.json
+└── README.md
 ```
 
 ---
 
-## ⚡ Quickstart
-
-### 1️⃣ Setup Environment
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2️⃣ Run FastAPI Service
-
-```bash
-uvicorn cavs.api:app --reload
-```
-
-Service will be live at 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
----
-
-## 📜 Smart Contract – `contracts/ContentAnchor.sol`
+## ⚡ Smart Contract (Solidity)
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
-contract ContentAnchor {
-    struct Record {
-        bytes32 contentHash;
-        string metadataURI;
-        address creator;
-        uint256 timestamp;
-        bool revoked;
+contract VerificationSystem {
+    mapping(bytes32 => bool) private verifiedHashes;
+
+    event ContentVerified(bytes32 indexed contentHash, address indexed verifier);
+
+    function verifyContent(bytes32 _contentHash) public {
+        require(!verifiedHashes[_contentHash], "Content already verified");
+        verifiedHashes[_contentHash] = true;
+        emit ContentVerified(_contentHash, msg.sender);
     }
 
-    mapping(bytes32 => Record) public records;
-
-    event Anchored(bytes32 indexed contentHash, address indexed creator, string metadataURI, uint256 timestamp);
-    event Revoked(bytes32 indexed contentHash, address indexed by, uint256 timestamp);
-
-    function anchorContent(bytes32 contentHash, string calldata metadataURI) external {
-        require(records[contentHash].timestamp == 0, "Already anchored");
-        records[contentHash] = Record(contentHash, metadataURI, msg.sender, block.timestamp, false);
-        emit Anchored(contentHash, msg.sender, metadataURI, block.timestamp);
-    }
-
-    function revokeContent(bytes32 contentHash) external {
-        require(records[contentHash].timestamp != 0, "Not anchored");
-        records[contentHash].revoked = true;
-        emit Revoked(contentHash, msg.sender, block.timestamp);
-    }
-
-    function getRecord(bytes32 contentHash) external view returns (Record memory) {
-        return records[contentHash];
+    function isVerified(bytes32 _contentHash) public view returns (bool) {
+        return verifiedHashes[_contentHash];
     }
 }
 ```
 
 ---
 
-## 📡 API Endpoints
+## ⚙️ Tech Stack
 
-### `POST /anchor`
+* **Frontend**: React (Vite) + TailwindCSS + Ethers.js
+* **Backend**: Node.js + Express + MongoDB
+* **Blockchain**: Solidity (Remix IDE + Ganache local blockchain)
+* **Database**: MongoDB (for storing metadata & user interactions)
 
-* Upload + sign + anchor content
-* Example request:
+---
 
-```json
-{
-  "file_path": "docs/article.pdf",
-  "metadata": { "author": "Alice", "title": "Blockchain Paper" }
-}
+## 🔧 Setup & Installation
+
+### 1️⃣ Clone Repo
+
+```bash
+git clone https://github.com/your-username/content-verification-system.git
+cd content-verification-system
 ```
 
-### `GET /verify/{content_hash}`
+### 2️⃣ Backend Setup
 
-* Verify hash → blockchain record + revocation status
-
----
-
-## 🔮 Next Steps
-
-* ✅ Replace mock IPFS with **real nft.storage / web3.storage**
-* ✅ Deploy contract to **Ethereum / Polygon testnet**
-* ✅ Add **frontend dashboard** for journalists & researchers
-* ✅ Support **AI-generated content detection**
-
----
-
-## 📌 Requirements (`requirements.txt`)
-
-```
-fastapi
-uvicorn
-pydantic
-cryptography
-web3
-ipfshttpclient
+```bash
+cd backend
+npm install
 ```
 
+Create a `.env` file in `backend/`:
+
+```
+MONGO_URI=mongodb://localhost:27017/verification
+PORT=5000
+```
+
+Run backend:
+
+```bash
+npm run dev
+```
+
+### 3️⃣ Smart Contract Deployment (Remix + Ganache)
+
+1. Open **Remix IDE** in browser.
+2. Copy `VerificationSystem.sol` into Remix.
+3. Connect Remix to **Ganache** (local blockchain).
+4. Deploy contract → copy the deployed contract **address** + **ABI**.
+
 ---
 
-## ✨ Use Cases
+### 4️⃣ Frontend Setup
 
-* Journalism – Prevent **fake news**
-* Research – Validate **original scientific data**
-* Media – Protect **creators’ rights**
-* Governance – Ensure **document integrity**
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env` file in `frontend/`:
+
+```
+VITE_CONTRACT_ADDRESS=0xYourDeployedAddressHere
+VITE_CONTRACT_ABI=[{"inputs":[{"internalType":"bytes32","name":"_contentHash","type":"bytes32"}], "name":"verifyContent", "outputs":[], "stateMutability":"nonpayable", "type":"function"}, {"inputs":[{"internalType":"bytes32","name":"_contentHash","type":"bytes32"}], "name":"isVerified","outputs":[{"internalType":"bool","name":"","type":"bool"}], "stateMutability":"view","type":"function"}]
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
 
 ---
 
-👉 With this, you have a working **Python MVP + Smart Contract** ready to extend into production.
+## 🚀 Usage
+
+* Enter content → system hashes it (keccak256).
+* Click **Verify** → transaction sent to Ganache via MetaMask.
+* Verified hashes are stored on-chain.
+* `isVerified` can be queried to check authenticity.
+* Backend (MongoDB) logs metadata and requests.
 
 ---
 
+## 🛠️ Future Enhancements
+
+* ✅ Deploy on a public testnet (Goerli/Sepolia)
+* ✅ Add JWT-based authentication
+* ✅ Implement IPFS for content storage
+* ✅ Create a dashboard for admins to monitor verification stats
+
+---
+
+## 📜 License
+
+MIT License © 2025
