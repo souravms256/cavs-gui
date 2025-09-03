@@ -1,4 +1,4 @@
-Perfect 👍 thanks for sharing all the details! Since you’re using **Remix + Ganache** as your 
+
 # 🛡️ Content Verification System (Blockchain + Web3 + MongoDB)
 
 A decentralized content verification system built with **Solidity, Hardhat/Remix, Ganache, MongoDB, Node.js/Express, and Vite + React**.
