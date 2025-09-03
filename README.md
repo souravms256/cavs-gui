@@ -1,7 +1,7 @@
 
 # 🛡️ Content Verification System (Blockchain + Web3 + MongoDB)
 
-A decentralized content verification system built with **Solidity, Hardhat/Remix, Ganache, MongoDB, Node.js/Express, and Vite + React**.
+A decentralized content verification system built with **Solidity, Remix, Ganache, MongoDB, Node.js/Express, and Vite + React**.
 The system allows users to **verify content hashes on-chain** and query whether a piece of content has been previously verified.
 
 ---
