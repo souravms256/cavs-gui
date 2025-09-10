@@ -1,5 +1,5 @@
 
-# 🛡️ Content Verification System (Blockchain + Web3 + MongoDB)
+# 🛡️ Content Verification System (Blockchain + Web3 + MongoDB + Pinata IPFS Server)
 
 A decentralized content verification system built with **Solidity, Remix, Ganache, MongoDB, Node.js/Express, and Vite + React**.
 The system allows users to **verify content hashes on-chain** and query whether a piece of content has been previously verified.
@@ -22,9 +22,8 @@ project-root/
 │   │   └── main.jsx       # React entry point
 │   └── vite.config.js     # Vite config
 │
-│── contracts/             # Solidity Smart Contracts
-│   └── VerificationSystem.sol
-│
+│── VerificationSystem.sol    # Solidity Smart Contracts
+|── .gitignore
 │── .env                   # Environment variables
 │── package.json
 └── README.md
